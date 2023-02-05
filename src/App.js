@@ -1,3 +1,4 @@
+import './App.css'
 import Component from "./components/Component";
 
 function App() {

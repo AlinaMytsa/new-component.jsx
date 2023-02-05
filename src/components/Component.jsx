@@ -1,63 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import cn from "classnames";
+import React from 'react';
+import Filler from "./Filler";
 
-const Component = (props) =>{
-  const btnCN = cn('btn btn-outline-')
-  const [value, setValue] = useState(null);
-
-  useEffect(() =>{
-    setValue(JSON.parse(window.localStorage.getItem('value')))
-  }, [])
-
-  useEffect(() =>{
-   window.localStorage.setItem('value', value)
-  }, [value])
-
-  const handleClickLeft = (e) => {
-    e.preventDefault();
-    return setValue('2')
+class Component extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0,
+      value: []
+    }
   }
 
-  const handleClickRight = (e) => {
-    e.preventDefault();
-    return setValue('1')
+  handleClick = (sign) => () => {
+    if (sign === '+'){
+      let newCount = this.state.count  + 1;
+      let array = this.state.value;
+      array.unshift(newCount)
+      this.setState({
+        count: newCount,
+        value: array
+      })
+    }
+
+    if (sign === '-'){
+      let newCount = this.state.count - 1;
+      let array = this.state.value;
+      array.unshift(newCount);
+      this.setState({
+        count: newCount,
+        value: array
+      })
+    }
   }
 
-  const renderStringOfCode = () => {
+  render() {
+    const addItem = this.handleClick('+');
+    const removeItem = this.handleClick('-');
+
     return (
-      <button type="button" className="list-group-item list-group-item-action">{value}</button>
+      <div>
+        <div className="btn-group font-monospace" role="group">
+          <button onClick={addItem} type="button" className="btn btn-outline-success">+</button>
+          <button onClick={removeItem} type="button" className="btn btn-outline-danger">-</button>
+        </div>
+
+        <Filler value={this.state.value}/>
+      </div>
     )
   }
 
-  return (
-    <div>
-      <div className="btn-group font-monospace" role="group">
-        <button onClick={handleClickLeft} type="button" className={btnCN +'success'}>+</button>
-        <button onClick={handleClickRight} type="button" className={btnCN +'danger'}>-</button>
-      </div>
-      <div className="list-group">
-        {renderStringOfCode()}
-      </div>
-    </div>
-  )
-
 }
-
-    // Каждое нажатие кнопки добавляет в лог новую строчку сверху.
-    // После нажатия последовательности +, +, -, +:
-    // <div>
-    //   <div className="btn-group font-monospace" role="group">
-    //     <button type="button" className="btn btn-outline-success">+</button>
-    //     <button type="button" className="btn btn-outline-danger">-</button>
-    //   </div>
-    //   <div className="list-group">
-    //     <button type="button" className="list-group-item list-group-item-action">2</button>
-    //     <button type="button" className="list-group-item list-group-item-action">1</button>
-    //     <button type="button" className="list-group-item list-group-item-action">2</button>
-    //     <button type="button" className="list-group-item list-group-item-action">1</button>
-    //   </div>
-    // </div>
-
 
 
 export default Component;
